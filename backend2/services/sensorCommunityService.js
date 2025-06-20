@@ -3,11 +3,57 @@ const axios = require('axios');
 const SENSOR_COMMUNITY_URL = process.env.SENSOR_COMMUNITY_URL
 const X_SENSOR = process.env.X_SENSOR
 const PIN_MAPPING = {
-  temperature: process.env.X_PIN_TEMP,
-  dust: process.env.X_PIN_DUST,
-  micro: process.env.X_PIN_MICRO,
-  gps: process.env.X_PIN_GPS,
+  // SDS011
+  P1: '1', // PM10
+  P2: '1', // PM2.5
+  // BME280
+  temperature_bme280: '11',
+  humidity_bme280: '11',
+  pressure_bme280: '11',
+  // DS18B20
+  temperature_ds18b20: '13',
+  // DNMS (Laerm)
+  noise: '15',
+  // BMP280
+  temperature_bmp280: '3',
+  pressure_bmp280: '3',
+  // DHT22
+  temperature_dht22: '7',
+  humidity_dht22: '7',
+  // GPS-NEO-6M
+  latitude: '9',
+  longitude: '9',
+  altitude: '9',
 };
+
+// Fonction utilitaire pour choisir le bon pin selon le type de donnée et le capteur
+function getPinForData(data) {
+  // On peut enrichir le data envoyé par le capteur avec un champ "sensor" si besoin
+  // Sinon, on fait un mapping par défaut selon le type de donnée
+  switch (data.name) {
+    case 'P1':
+    case 'P2':
+      return PIN_MAPPING[data.name];
+    case 'humidity':
+      // Par défaut BME280, sinon DHT22
+      return PIN_MAPPING['humidity_bme280'] || PIN_MAPPING['humidity_dht22'];
+    case 'pressure':
+      // Par défaut BME280, sinon BMP280
+      return PIN_MAPPING['pressure_bme280'] || PIN_MAPPING['pressure_bmp280'];
+    case 'temperature':
+      // On priorise BME280, puis DS18B20, puis BMP280, puis DHT22
+      return PIN_MAPPING['temperature_bme280'] || PIN_MAPPING['temperature_ds18b20'] || PIN_MAPPING['temperature_bmp280'] || PIN_MAPPING['temperature_dht22'];
+    case 'noise':
+      return PIN_MAPPING['noise'];
+    case 'latitude':
+    case 'longitude':
+    case 'altitude':
+      return PIN_MAPPING[data.name];
+    default:
+      return '0';
+  }
+}
+
 
 function buildPayload(dataArray) {
   // Adapt this function to build Sensor Community payloads as needed
@@ -18,7 +64,7 @@ function buildPayload(dataArray) {
     payloads.push({
       headers: {
         'X-Sensor': X_SENSOR,
-        'X-Pin': PIN_MAPPING[data.name] || '0',
+        'X-Pin': getPinForData(data),
         'Content-Type': 'application/json',
       },
       body: {

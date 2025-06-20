@@ -1,0 +1,1 @@
+https://api-rrd.madavi.de/grafana/d/GUaL5aZMz/pm-sensors?orgId=1&var-chipID=esp32-60663178894421461390835974107199
