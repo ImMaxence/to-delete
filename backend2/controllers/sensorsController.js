@@ -22,3 +22,12 @@ exports.receiveData = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
+
+exports.getAllData = async (req, res) => {
+  try {
+    const data = await SensorData.findAll({ order: [['createdAt', 'DESC']] });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
