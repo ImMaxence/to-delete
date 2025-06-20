@@ -27,6 +27,7 @@ function buildPayload(dataArray) {
           { value_type: data.name, value: String(data.value) },
         ],
       },
+      original: data // Ajout pour log
     });
   }
   return payloads;
@@ -34,16 +35,23 @@ function buildPayload(dataArray) {
 
 exports.sendToSensorCommunity = async (dataArray) => {
   const payloads = buildPayload(dataArray);
-  for (const { headers, body } of payloads) {
+  console.log('--- [Sensor Community] Envoi des données ---');
+  console.log('Payload d\'origine reçu :', JSON.stringify(dataArray, null, 2));
+  for (const { headers, body, original } of payloads) {
+    console.log('\n[Sensor Community] Préparation d\'un payload pour :', original);
+    console.log('[Sensor Community] Headers envoyés :', headers);
+    console.log('[Sensor Community] Body envoyé :', JSON.stringify(body, null, 2));
     try {
       const response = await axios.post(SENSOR_COMMUNITY_URL, body, { headers });
       console.log(`[Sensor Community] OK (${response.status}) :`, response.data);
     } catch (err) {
       if (err.response) {
         console.error(`[Sensor Community] ERREUR (${err.response.status}) :`, err.response.data);
+        console.error('[Sensor Community] Body problématique :', JSON.stringify(body, null, 2));
       } else {
         console.error('[Sensor Community] ERREUR :', err.message);
       }
     }
   }
+  console.log('--- [Sensor Community] Fin de l\'envoi ---');
 };
