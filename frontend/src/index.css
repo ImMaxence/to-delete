@@ -1,0 +1,7 @@
+body {
+  background: #f9fafb;
+  font-family: system-ui, sans-serif;
+}
+.tremor-Card {
+  box-shadow: 0 2px 8px 0 #0001;
+}
