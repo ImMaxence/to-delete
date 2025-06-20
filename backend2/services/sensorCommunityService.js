@@ -44,7 +44,7 @@ function getPinForData(data) {
       // On priorise BME280, puis DS18B20, puis BMP280, puis DHT22
       return PIN_MAPPING['temperature_bme280'] || PIN_MAPPING['temperature_ds18b20'] || PIN_MAPPING['temperature_bmp280'] || PIN_MAPPING['temperature_dht22'];
     case 'noise':
-      return PIN_MAPPING['noise'];
+      return PIN_MAPPING['noise_LAeq'];
     case 'latitude':
     case 'longitude':
     case 'altitude':
