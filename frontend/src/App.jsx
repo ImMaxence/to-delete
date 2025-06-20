@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Title, BarChart, Text, Grid, Subtitle, Button, TextInput, Tab, TabList, TabPanel, TabPanels, Tabs } from "@tremor/react";
+import { Card, Title, BarChart, Text, Grid, Subtitle, Button, TextInput, Tab, TabList, TabPanel, TabPanels, TabGroup } from "@tremor/react";
 
 const API_URL = "https://to-delete-production.up.railway.app/api/sensors";
 
@@ -78,7 +78,7 @@ export default function App() {
   return (
     <main className="p-8 max-w-5xl mx-auto">
       <Title>Dashboard Capteurs (Sensor Community)</Title>
-      <Tabs value={tab} onValueChange={setTab} className="mt-6">
+      <TabGroup index={tab} onIndexChange={setTab} className="mt-6">
         <TabList>
           <Tab>Visualisation</Tab>
           <Tab>Simulateur POST</Tab>
@@ -92,7 +92,7 @@ export default function App() {
             <TerminalSimulator onSend={handleSend} response={postResp} loading={loading} />
           </TabPanel>
         </TabPanels>
-      </Tabs>
+      </TabGroup>
     </main>
   );
 }

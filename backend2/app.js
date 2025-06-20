@@ -6,6 +6,8 @@ const sensorsRoutes = require('./routes/sensors');
 const setupSwagger = require('./swagger');
 
 const app = express();
+const cors = require('cors');
+app.use(cors());
 app.use(bodyParser.json());
 setupSwagger(app);
 app.use('/api/sensors', sensorsRoutes);

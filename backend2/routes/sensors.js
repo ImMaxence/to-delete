@@ -33,5 +33,6 @@ const sensorsController = require('../controllers/sensorsController');
  *         description: Erreur serveur.
  */
 router.post('/', sensorsController.receiveData);
+router.get('/all', sensorsController.getAllData);
 
 module.exports = router;
