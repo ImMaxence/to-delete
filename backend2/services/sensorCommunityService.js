@@ -36,9 +36,14 @@ exports.sendToSensorCommunity = async (dataArray) => {
   const payloads = buildPayload(dataArray);
   for (const { headers, body } of payloads) {
     try {
-      await axios.post(SENSOR_COMMUNITY_URL, body, { headers });
+      const response = await axios.post(SENSOR_COMMUNITY_URL, body, { headers });
+      console.log(`[Sensor Community] OK (${response.status}) :`, response.data);
     } catch (err) {
-      console.error('Sensor Community error:', err.response?.status, err.response?.data);
+      if (err.response) {
+        console.error(`[Sensor Community] ERREUR (${err.response.status}) :`, err.response.data);
+      } else {
+        console.error('[Sensor Community] ERREUR :', err.message);
+      }
     }
   }
 };
