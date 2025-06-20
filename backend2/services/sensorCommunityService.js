@@ -13,7 +13,11 @@ const PIN_MAPPING = {
   // DS18B20
   temperature_ds18b20: '13',
   // DNMS (Laerm)
-  noise: '15',
+  noise_LAeq: process.env.X_PIN_MICRO || '15',
+  noise_LA_min: process.env.X_PIN_MICRO || '15',
+  noise_LA_max: process.env.X_PIN_MICRO || '15',
+  // (optionnel: garde l'ancien noise pour compat)
+  noise: process.env.X_PIN_MICRO || '15',
   // BMP280
   temperature_bmp280: '3',
   pressure_bmp280: '3',
@@ -43,8 +47,12 @@ function getPinForData(data) {
     case 'temperature':
       // On priorise BME280, puis DS18B20, puis BMP280, puis DHT22
       return PIN_MAPPING['temperature_bme280'] || PIN_MAPPING['temperature_ds18b20'] || PIN_MAPPING['temperature_bmp280'] || PIN_MAPPING['temperature_dht22'];
-    case 'noise':
+    case 'noise_LAeq':
+    case 'noise_LA_min':
+    case 'noise_LA_max':
       return PIN_MAPPING['noise_LAeq'];
+    case 'noise':
+      return PIN_MAPPING['noise'];
     case 'latitude':
     case 'longitude':
     case 'altitude':
