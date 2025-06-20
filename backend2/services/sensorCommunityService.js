@@ -1,12 +1,12 @@
 const axios = require('axios');
 
-const SENSOR_COMMUNITY_URL = process.env.SENSOR_COMMUNITY_URL || 'https://api.sensor.community/v1/push-sensor-data/';
-const X_SENSOR = process.env.X_SENSOR || 'esp32-XXXXXXXXXXXX';
+const SENSOR_COMMUNITY_URL = process.env.SENSOR_COMMUNITY_URL
+const X_SENSOR = process.env.X_SENSOR
 const PIN_MAPPING = {
-  temperature: process.env.X_PIN_TEMP || '3',
-  dust: process.env.X_PIN_DUST || '1',
-  micro: process.env.X_PIN_MICRO || '13',
-  gps: process.env.X_PIN_GPS || '9',
+  temperature: process.env.X_PIN_TEMP,
+  dust: process.env.X_PIN_DUST,
+  micro: process.env.X_PIN_MICRO,
+  gps: process.env.X_PIN_GPS,
 };
 
 function buildPayload(dataArray) {
@@ -51,7 +51,10 @@ exports.sendToSensorCommunity = async (dataArray) => {
       } else {
         console.error('[Sensor Community] ERREUR :', err.message);
       }
+      console.log('--- [Sensor Community] Fin de l\'envoi ---');
+      return false; // Arrête dès la première erreur
     }
   }
   console.log('--- [Sensor Community] Fin de l\'envoi ---');
+  return true;
 };
