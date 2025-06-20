@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - PORT=${PORT}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SENSOR_COMMUNITY_URL=${SENSOR_COMMUNITY_URL}
+      - X_SENSOR=${X_SENSOR}
+      - X_PIN_MICRO=${X_PIN_MICRO}
+      - X_PIN_DUST=${X_PIN_DUST}
+      - X_PIN_TEMP=${X_PIN_TEMP}
+      - X_PIN_GPS=${X_PIN_GPS}
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - .:/usr/src/app
+    command: npm start
+volumes:
+  db_data:
